@@ -13,4 +13,22 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
 
 ----
 
-Datos servidos desde https://covid19.patria.org.ve/api-covid-19-venezuela/
+## Muestra:
+
+[![Casos confirmados](./images/fig1.png "Casos confirmados")](ppv.svg)
+
+
+[![Casos nuevos](./images/fig2.png "Casos nuevos")](ppv.svg)
+
+
+[![Casos acumulados](./images/fig3.png "Casos acumulados por día")](ppv.svg)
+
+
+[![Casos por género](./images/fig4.png "Distribución de casoso por género")](ppv.svg)
+
+
+[![Casos por edad](./images/fig5.png "Distribución de casos por edad")](ppv.svg)
+
+----
+
+Datos adquiridos desde https://covid19.patria.org.ve/api-covid-19-venezuela/
