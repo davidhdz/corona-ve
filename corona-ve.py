@@ -34,7 +34,7 @@ explode = (0.1, 0)
 
 
 # Función para añadir valores encima de las barras
-def show_values_on_bars(axis):
+def show_values_on_bars(axs):
     def _show_on_single_plot(ax):
         for p in ax.patches:
             _x = p.get_x() + p.get_width() / 2
@@ -166,7 +166,7 @@ try:
     recovered_bars.set(xlabel='', ylabel='')
     actives_bars.set(xlabel='', ylabel='Cantidad de casos')
     deaths_bars.set(xlabel='', ylabel='')
-    plt.suptitle('Casos diarios de COVID-19 en Venezuela',
+    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados por día)',
                 fontsize=15, weight='bold')
     actives_bars.figure.autofmt_xdate(rotation='90', ha='center')
     fig3.legend(handles=[l1, l2, l3, l4], frameon=False,
