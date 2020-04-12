@@ -4,7 +4,7 @@
 """
 Visualización del Corona Virus en Venezuela
 utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
-por David Hernandez Aponte <@davidhdz> 2020
+por David Hernandez APonte <@davidhdz> 2020
 """
 
 import seaborn as sns
@@ -221,6 +221,12 @@ try:
     print("Recuperados: \t",  int(last_report['Recovered']['New']))
     print("Fallecidos: \t",  int(last_report['Deaths']['New']))
     print()
+    print("Estadísticas")
+    print("===========================")
+    print("Mortalidad: \t{0:3.2f}%".format((int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
+    print("Recuperación: \t{0:3.2f}%".format((int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
+    print()
+
 
 except:
     print("Ha ocurrido un error. Intente de nuevo.")
