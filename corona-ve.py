@@ -4,7 +4,7 @@
 """
 Visualización del Corona Virus en Venezuela
 utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
-por David Hernandez APonte <@davidhdz> 2020
+por David Hernandez Aponte <@davidhdz> 2020
 """
 
 import seaborn as sns
