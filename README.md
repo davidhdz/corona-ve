@@ -35,21 +35,21 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
     
     Casos COVID-19 en Venezuela
     ===========================
-    Confirmados: 	 175
-    Recuperados: 	 93
-    Fallecidos: 	 9
-    Activos: 	 73
+    Confirmados:     175
+    Recuperados:     93
+    Fallecidos:      9
+    Activos:         73
     
     Nuevos casos al 11/04/2020
     ===========================
-    Confirmados: 	 0
-    Recuperados: 	 9
-    Fallecidos: 	 0 
+    Confirmados:     0
+    Recuperados:     9
+    Fallecidos:      0 
     
     Estadísticas
     ===========================
-    Mortalidad: 	5.14%
-    Recuperación: 	53.14%
+    Mortalidad:     5.14%
+    Recuperación:   53.14%
     
 
 ----
