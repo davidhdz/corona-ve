@@ -15,19 +15,19 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
 
 ## Muestra:
 
-[![Casos confirmados](./images/fig1.png "Casos confirmados")](ppv.svg)
+[![Casos confirmados](./images/fig1.png "Casos confirmados")](/images/fig1.png)
 
 
-[![Casos nuevos](./images/fig2.png "Casos nuevos")](ppv.svg)
+[![Casos nuevos](./images/fig2.png "Casos nuevos")](/images/fig1.png)
 
 
-[![Casos acumulados](./images/fig3.png "Casos acumulados por día")](ppv.svg)
+[![Casos acumulados](./images/fig3.png "Casos acumulados por día")](/images/fig1.png)
 
 
-[![Casos por género](./images/fig4.png "Distribución de casoso por género")](ppv.svg)
+[![Casos por género](./images/fig4.png "Distribución de casoso por género")](/images/fig1.png)
 
 
-[![Casos por edad](./images/fig5.png "Distribución de casos por edad")](ppv.svg)
+[![Casos por edad](./images/fig5.png "Distribución de casos por edad")](/images/fig1.png)
 
 ----
 
