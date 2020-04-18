@@ -223,7 +223,7 @@ try:
     print()
     print("Estadísticas")
     print("===========================")
-    print("Mortalidad: \t{0:3.2f}%".format((int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
+    print("Letalidad: \t{0:3.2f}%".format((int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
     print("Recuperación: \t{0:3.2f}%".format((int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
     print()
 
