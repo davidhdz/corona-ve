@@ -7,10 +7,10 @@ utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
 por David Hernandez Aponte <@davidhdz> 2020
 """
 
-import seaborn as sns
+# import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import matplotlib.patches as mpatches
+from matplotlib.dates import date2num
 import numpy as np
 import pandas as pd
 
@@ -18,36 +18,35 @@ import pandas as pd
 # Dimensión de los gráficos generados
 dims = (15, 8)
 
-# Patch para leyenda del gráfico de barras de Casos nuevos
-l1 = mpatches.Patch(color='C0', alpha=0.8, label='Confirmados')
-l2 = mpatches.Patch(color='C1', alpha=0.8, label='Recuperados')
-l3 = mpatches.Patch(color='C2', alpha=0.8, label='Activos')
-l4 = mpatches.Patch(color='C3', alpha=0.8, label='Fallecidos')
-
 # Personalización general de los gráficos
-sns.set_style("darkgrid")
-sns.set_palette("bright")
+plt.style.use('seaborn-darkgrid')
+plt.rcParams['lines.linewidth'] = 2
+plt.rcParams['axes.titleweight'] = 'bold'
 
 
-# Función para añadir valores encima de las barras
+# Función para añadir valores encima de las gráficas
 def show_values_on_bars(axs):
     def _show_on_single_plot(ax):
         for p in ax.patches:
             _x = p.get_x() + p.get_width() / 2
-            _y = p.get_y() + p.get_height()
+            _y = p.get_y() + p.get_height() + .5
             value = '{:.0f}'.format(p.get_height())
             if int(value) > 0:
                 ax.text(_x, _y, value, ha="center", size="x-small")
-
     if isinstance(axs, np.ndarray):
         for idx, ax in np.ndenumerate(axs):
             _show_on_single_plot(ax)
     else:
         _show_on_single_plot(axs)
 
+def show_values_on_lines(x,y):
+        for i,j in zip(x,y):
+            if int(j) > 0:
+                ax.annotate(str(j),xy=(i,j), xytext=(-5,6), textcoords='offset points', size="x-small")
+
 
 # Carga de datos y generación de Data frames para los gráficos de línea de tiempo
-try: 
+try:
     timeline = pd.read_json('https://covid19.patria.org.ve/api/v1/timeline')
     timeline['Date'] = timeline['Date'].dt.date
     df_confirmed = pd.DataFrame(timeline.Confirmed.values.tolist())
@@ -81,127 +80,104 @@ try:
 
 
     # Gráfico del número de casos registrados en Venezuela
-    fig1 = plt.figure(figsize=dims)
+    fig, ax = plt.subplots(figsize=dims)
+    ax.plot(confirmados["Date"], confirmados["Count"],
+            'o-', label='Confirmados', alpha=0.8)
+    show_values_on_lines(confirmados["Date"], confirmados["Count"])
+    ax.plot(recuperados["Date"], recuperados["Count"],
+            'o-', label='Recuperados', alpha=0.8)
+    show_values_on_lines(recuperados["Date"], recuperados["Count"])
+    ax.plot(activos["Date"], activos["Count"], 'o-', label='Activos', alpha=0.8)
+    show_values_on_lines(activos["Date"], activos["Count"])
+    ax.plot(fallecidos["Date"], fallecidos["Count"],
+            'o-', label='Fallecidos', alpha=0.8)
+    show_values_on_lines(fallecidos["Date"], fallecidos["Count"])
+    plt.xticks(rotation=45, ha='right')
+    ax.set(
+        xlabel='',
+        ylabel='Cantidad de casos',
+        title='Casos confirmados de COVID-19 en Venezuela',
+        xticks=(timeline['Date']),
+    )
+    ax.legend(loc='upper left', fontsize=12)
 
-    confirmed_lines = sns.lineplot(
-        x="Date",
-        y="Count",
-        alpha=0.8,
-        markers=True,
-        marker="o",
-        data=confirmados,
-        label='Confirmados'
-    )
-    recovered_lines = sns.lineplot(
-        x="Date",
-        y="Count",
-        alpha=0.8,
-        markers=True,
-        marker="o",
-        data=recuperados,
-        label='Recuperados'
-    )
-    actives_lines = sns.lineplot(
-        x="Date",
-        y="Count",
-        alpha=0.8,
-        markers=True,
-        marker="o",
-        data=activos,
-        label='Activos'
-    )
-    deaths_lines = sns.lineplot(
-        x="Date",
-        y="Count",
-        alpha=0.8,
-        markers=True,
-        marker="o",
-        data=fallecidos,
-        label='Fallecidos'
-    )
-
-    plt.xlabel("", fontsize=12, weight='bold')
-    plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos confirmados de COVID-19 en Venezuela",
-            fontsize=15, weight='bold')
-    confirmed_lines.xaxis.set_major_locator(mdates.DayLocator(interval=1))
-    confirmed_lines.figure.autofmt_xdate()
-
-    fig1.savefig("fig1.png")
+    plt.savefig("fig1.png")
 
 
     # Gráfico del número de casos nuevos en Venezuela
-    fig2 = plt.figure(figsize=dims)
-
-    new_cases = sns.barplot(x="Date", y="vals", hue="cols",
-                            data=df_nuevos, alpha=0.8, palette=["C0", "C1", "C3"], dodge=True)
-    new_cases.figure.autofmt_xdate(rotation='90', ha="center")
-
-    show_values_on_bars(new_cases)
-    plt.title("Nuevos casos de COVID-19 en Venezuela", fontsize=15, weight='bold')
-    plt.xlabel("", fontsize=12, weight='bold')
-    plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    new_cases.legend_.remove()
-    fig2.legend(handles=[l1, l2, l4], frameon=False, loc='upper center', ncol=3)
-
-    fig2.savefig("fig2.png")
+    fig, ax = plt.subplots(figsize=dims)
+    x = date2num(nuevos['Date'])
+    barwidth = .3
+    bar1 = ax.bar(x - barwidth, nuevos["New_Confirmed"],
+                width=barwidth, label='Confirmados', alpha=0.8)
+    bar2 = ax.bar(x, nuevos["New_Recovered"],
+                width=barwidth, label='Recuperados', alpha=0.8)
+    bar3 = ax.bar(x + barwidth, nuevos["New_Death"],
+                width=barwidth, label='Fallecidos', color='C3', alpha=0.8)
+    plt.xticks(rotation=90, ha='center')
+    ax.set(
+        xlabel='',
+        ylabel='Cantidad de casos',
+        title='Nuevos casos de COVID-19 en Venezuela',
+        xticks=(nuevos['Date']),
+    )
+    show_values_on_bars(ax)
+    myFmt = mdates.DateFormatter('%Y-%m-%d')
+    ax.xaxis.set_major_formatter(myFmt)
+    ax.legend(loc='upper left', fontsize=12)
+    plt.savefig("fig2.png")
 
 
     # Gráfico de casos en Venezuela
-    fig3, axes = plt.subplots(4, figsize=dims, sharex=True, sharey=True)
-
-    confirmed_bars = sns.barplot(
-        x="Date", y="Count", data=confirmados, color="C0", alpha=0.8, ax=axes[0])
-    recovered_bars = sns.barplot(
-        x="Date", y="Count", data=recuperados, color="C1", alpha=0.8, ax=axes[1])
-    actives_bars = sns.barplot(
-        x="Date", y="Count", data=activos, color="C2", alpha=0.8, ax=axes[2])
-    deaths_bars = sns.barplot(
-        x="Date", y="Count", data=fallecidos, color="C3", alpha=0.8, ax=axes[3])
-
-    show_values_on_bars(axes)
-    confirmed_bars.set(xlabel='', ylabel='Cantidad de casos')
-    recovered_bars.set(xlabel='', ylabel='Cantidad de casos')
-    actives_bars.set(xlabel='', ylabel='Cantidad de casos')
-    deaths_bars.set(xlabel='', ylabel='Cantidad de casos')
+    fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(
+        4, figsize=dims, sharex=True, sharey=True)
+    fig.tight_layout(pad=4.0)
+    ax1.bar(confirmados["Date"], confirmados["Count"], color='C0', alpha=0.8)
+    ax1.set_title('Confirmados')
+    show_values_on_bars(ax1)
+    ax2.bar(recuperados["Date"], recuperados["Count"], color='C1', alpha=0.8)
+    ax2.set_title('Recuperados')
+    show_values_on_bars(ax2)
+    ax3.bar(activos["Date"], activos["Count"], color='C2', alpha=0.8)
+    ax3.set_title('Activos')
+    show_values_on_bars(ax3)
+    ax4.bar(fallecidos["Date"], fallecidos["Count"], color='C3', alpha=0.8)
+    ax4.set_title('Fallecidos')
+    show_values_on_bars(ax4)
+    plt.xticks(rotation=45, ha='right')
     plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
                 fontsize=15, weight='bold')
-    actives_bars.figure.autofmt_xdate(rotation='90', ha='center')
-    fig3.legend(handles=[l1, l2, l3, l4], frameon=False,
-                loc='lower center', ncol=4)
-
-    fig3.savefig("fig3.png")
+    for ax in fig.get_axes():
+        ax.set(
+            xlabel='',
+            ylabel='Cantidad de casos',
+            xticks=(nuevos['Date']),
+        )
+        ax.label_outer()
+    plt.savefig("fig3.png")
 
 
     # Gráfico de distribución por género de casos en Venezuela
-    fig4, ax4 = plt.subplots(figsize=dims)
-
-    ax4.pie(count_gender, labels=labels_gender, colors=['C0', 'C1'], wedgeprops={'alpha':0.8},
-            autopct=lambda p: '{:.0f}'.format(p * int(summary.Confirmed['Count']) / 100), shadow=False, startangle=90)
-
+    fig, ax = plt.subplots(figsize=dims)
+    ax.pie(count_gender, labels=labels_gender, colors=['C0', 'C1'], wedgeprops={'alpha':0.8},
+        autopct=lambda p: '{:.0f}'.format(p * int(summary.Confirmed['Count']) / 100), shadow=False, startangle=90)
     centre_circle = plt.Circle((0, 0), 0.7, fc='white')
     fig = plt.gcf()
     fig.gca().add_artist(centre_circle)
-
     plt.axis('equal')
-    plt.title("Distribución de casos por género",
-            fontsize=15, weight='bold')
-
-    fig4.savefig("fig4.png")
+    plt.title("Distribución de casos por género", fontsize=15, weight='bold')
+    fig.savefig("fig4.png")
 
 
     # Gráfico de distribución por edades de casos en Venezuela
-    fig5, ax5 = plt.subplots(figsize=dims)
-
-    gender_bars = sns.barplot(x="Range", y="Count", data=df_ages, alpha=0.8)
-
-    show_values_on_bars(gender_bars)
+    fig, ax = plt.subplots(figsize=dims)
+    ax.bar(df_ages["Range"], df_ages["Count"], color=['C0', 'C1',
+                                                    'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], alpha=0.8)
+    show_values_on_bars(ax)
     plt.xlabel("Rango de edad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Distribución de casos por edad",
-            fontsize=15, weight='bold')
-
-    fig5.savefig("fig5.png")
+    plt.title("Distribución de casos por edad", fontsize=15, weight='bold')
+    fig.savefig("fig5.png")
 
 
     # Salida por cónsola
@@ -221,8 +197,10 @@ try:
     print()
     print("Estadísticas")
     print("===========================")
-    print("Letalidad: \t{0:3.2f}%".format((int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
-    print("Recuperación: \t{0:3.2f}%".format((int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
+    print("Letalidad: \t{0:3.2f}%".format(
+        (int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
+    print("Recuperación: \t{0:3.2f}%".format(
+        (int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
     print()
 
 except:
