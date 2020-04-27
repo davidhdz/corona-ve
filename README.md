@@ -6,7 +6,6 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
 
 ## Requerimientos:
 
-* seaborn
 * matplotlib
 * numpy
 * pandas
