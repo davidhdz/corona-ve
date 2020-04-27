@@ -4,7 +4,7 @@
 """
 Visualización del Corona Virus en Venezuela
 utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
-por David Hernandez APonte <@davidhdz> 2020
+por David Hernandez Aponte <@davidhdz> 2020
 """
 
 import seaborn as sns
@@ -19,18 +19,14 @@ import pandas as pd
 dims = (15, 8)
 
 # Patch para leyenda del gráfico de barras de Casos nuevos
-l1 = mpatches.Patch(color='#2A5CFF', alpha=0.6, label='Confirmados')
-l2 = mpatches.Patch(color='#FF9028', alpha=0.6, label='Recuperados')
-l3 = mpatches.Patch(color='#3ED157', alpha=0.6, label='Activos')
-l4 = mpatches.Patch(color='#EB2831', alpha=0.6, label='Fallecidos')
+l1 = mpatches.Patch(color='C0', alpha=0.8, label='Confirmados')
+l2 = mpatches.Patch(color='C1', alpha=0.8, label='Recuperados')
+l3 = mpatches.Patch(color='C2', alpha=0.8, label='Activos')
+l4 = mpatches.Patch(color='C3', alpha=0.8, label='Fallecidos')
 
 # Personalización general de los gráficos
 sns.set_style("darkgrid")
 sns.set_palette("bright")
-
-# Variables para el gráfico de distribución de casos por género
-colors = ['#2A5CFF99', '#FF902899']
-explode = (0.1, 0)
 
 
 # Función para añadir valores encima de las barras
@@ -90,34 +86,38 @@ try:
     confirmed_lines = sns.lineplot(
         x="Date",
         y="Count",
-        alpha=0.6,
+        alpha=0.8,
         markers=True,
         marker="o",
-        data=confirmados
+        data=confirmados,
+        label='Confirmados'
     )
     recovered_lines = sns.lineplot(
         x="Date",
         y="Count",
-        alpha=0.6,
+        alpha=0.8,
         markers=True,
         marker="o",
-        data=recuperados
+        data=recuperados,
+        label='Recuperados'
     )
     actives_lines = sns.lineplot(
         x="Date",
         y="Count",
-        alpha=0.6,
+        alpha=0.8,
         markers=True,
         marker="o",
-        data=activos
+        data=activos,
+        label='Activos'
     )
     deaths_lines = sns.lineplot(
         x="Date",
         y="Count",
-        alpha=0.6,
+        alpha=0.8,
         markers=True,
         marker="o",
-        data=fallecidos
+        data=fallecidos,
+        label='Fallecidos'
     )
 
     plt.xlabel("", fontsize=12, weight='bold')
@@ -126,8 +126,6 @@ try:
             fontsize=15, weight='bold')
     confirmed_lines.xaxis.set_major_locator(mdates.DayLocator(interval=1))
     confirmed_lines.figure.autofmt_xdate()
-    fig1.legend(labels=['Confirmados', 'Recuperados', 'Activos',
-                        'Fallecidos'], frameon=False, loc='upper center', ncol=4)
 
     fig1.savefig("fig1.png")
 
@@ -136,7 +134,7 @@ try:
     fig2 = plt.figure(figsize=dims)
 
     new_cases = sns.barplot(x="Date", y="vals", hue="cols",
-                            data=df_nuevos, alpha=0.6, palette=["C0", "C1", "C3"], dodge=True)
+                            data=df_nuevos, alpha=0.8, palette=["C0", "C1", "C3"], dodge=True)
     new_cases.figure.autofmt_xdate(rotation='90', ha="center")
 
     show_values_on_bars(new_cases)
@@ -150,23 +148,23 @@ try:
 
 
     # Gráfico de casos en Venezuela
-    fig3, axes = plt.subplots(2, 2, figsize=dims, sharex=True, sharey=True)
+    fig3, axes = plt.subplots(4, figsize=dims, sharex=True, sharey=True)
 
     confirmed_bars = sns.barplot(
-        x="Date", y="Count", data=confirmados, color="#2A5CFF", alpha=0.6, ax=axes[0, 0])
+        x="Date", y="Count", data=confirmados, color="C0", alpha=0.8, ax=axes[0])
     recovered_bars = sns.barplot(
-        x="Date", y="Count", data=recuperados, color="#FF9028", alpha=0.6, ax=axes[0, 1])
+        x="Date", y="Count", data=recuperados, color="C1", alpha=0.8, ax=axes[1])
     actives_bars = sns.barplot(
-        x="Date", y="Count", data=activos, color="#3ED157", alpha=0.6, ax=axes[1, 0])
+        x="Date", y="Count", data=activos, color="C2", alpha=0.8, ax=axes[2])
     deaths_bars = sns.barplot(
-        x="Date", y="Count", data=fallecidos, color="#EB2831", alpha=0.6, ax=axes[1, 1])
+        x="Date", y="Count", data=fallecidos, color="C3", alpha=0.8, ax=axes[3])
 
     show_values_on_bars(axes)
     confirmed_bars.set(xlabel='', ylabel='Cantidad de casos')
-    recovered_bars.set(xlabel='', ylabel='')
+    recovered_bars.set(xlabel='', ylabel='Cantidad de casos')
     actives_bars.set(xlabel='', ylabel='Cantidad de casos')
-    deaths_bars.set(xlabel='', ylabel='')
-    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados por día)',
+    deaths_bars.set(xlabel='', ylabel='Cantidad de casos')
+    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
                 fontsize=15, weight='bold')
     actives_bars.figure.autofmt_xdate(rotation='90', ha='center')
     fig3.legend(handles=[l1, l2, l3, l4], frameon=False,
@@ -178,7 +176,7 @@ try:
     # Gráfico de distribución por género de casos en Venezuela
     fig4, ax4 = plt.subplots(figsize=dims)
 
-    ax4.pie(count_gender, labels=labels_gender, colors=colors,
+    ax4.pie(count_gender, labels=labels_gender, colors=['C0', 'C1'], wedgeprops={'alpha':0.8},
             autopct=lambda p: '{:.0f}'.format(p * int(summary.Confirmed['Count']) / 100), shadow=False, startangle=90)
 
     centre_circle = plt.Circle((0, 0), 0.7, fc='white')
@@ -195,10 +193,10 @@ try:
     # Gráfico de distribución por edades de casos en Venezuela
     fig5, ax5 = plt.subplots(figsize=dims)
 
-    gender_bars = sns.barplot(x="Range", y="Count", data=df_ages, alpha=0.6)
+    gender_bars = sns.barplot(x="Range", y="Count", data=df_ages, alpha=0.8)
 
     show_values_on_bars(gender_bars)
-    plt.xlabel("", fontsize=12, weight='bold')
+    plt.xlabel("Rango de edad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
     plt.title("Distribución de casos por edad",
             fontsize=15, weight='bold')
@@ -226,7 +224,6 @@ try:
     print("Letalidad: \t{0:3.2f}%".format((int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
     print("Recuperación: \t{0:3.2f}%".format((int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
     print()
-
 
 except:
     print("Ha ocurrido un error. Intente de nuevo.")
