@@ -13,10 +13,11 @@ import matplotlib.dates as mdates
 from matplotlib.dates import date2num
 import numpy as np
 import pandas as pd
+import matplotlib.cm as cm
 
 
 # Dimensión de los gráficos generados
-dims = (15, 8)
+dims = (20, 11)
 
 # Personalización general de los gráficos
 plt.style.use('seaborn-darkgrid')
@@ -77,31 +78,38 @@ try:
     df_gender = pd.DataFrame(data)
     df_ages = pd.DataFrame(
         summary.Confirmed['ByAgeRange'].items(), columns=["Range", "Count"])
+    df_states = pd.DataFrame(
+        summary.Confirmed['ByState'].items(), columns=["State", "Count"])
 
 
     # Gráfico del número de casos registrados en Venezuela
     fig, ax = plt.subplots(figsize=dims)
     ax.plot(confirmados["Date"], confirmados["Count"],
-            'o-', label='Confirmados', alpha=0.8)
-    show_values_on_lines(confirmados["Date"], confirmados["Count"])
+            '-', label='Confirmados (acumulados)', alpha=0.8)
+    #show_values_on_lines(confirmados["Date"], confirmados["Count"])
     ax.plot(recuperados["Date"], recuperados["Count"],
-            'o-', label='Recuperados', alpha=0.8)
-    show_values_on_lines(recuperados["Date"], recuperados["Count"])
-    ax.plot(activos["Date"], activos["Count"], 'o-', label='Activos', alpha=0.8)
-    show_values_on_lines(activos["Date"], activos["Count"])
+            '-', label='Recuperados (acumulados)', alpha=0.8)
+    #show_values_on_lines(recuperados["Date"], recuperados["Count"])
+    ax.plot(activos["Date"], activos["Count"],
+            '-', label='Activos (acumulados)', alpha=0.8)
+    #show_values_on_lines(activos["Date"], activos["Count"])
     ax.plot(fallecidos["Date"], fallecidos["Count"],
-            'o-', label='Fallecidos', alpha=0.8)
-    show_values_on_lines(fallecidos["Date"], fallecidos["Count"])
-    plt.xticks(rotation=45, ha='right')
-    ax.set(
-        xlabel='',
-        ylabel='Cantidad de casos',
-        title='Casos confirmados de COVID-19 en Venezuela',
-        xticks=(timeline['Date']),
-    )
+            '-', label='Fallecidos (acumulados)', alpha=0.8)
+    #show_values_on_lines(fallecidos["Date"], fallecidos["Count"])
+    #ax.bar(nuevos["Date"],nuevos["New_Confirmed"],color='C6')
+    ax.plot(nuevos["Date"], nuevos["New_Confirmed"],
+            '-', label='Confirmados (diarios)', color='black', alpha=0.8)
+    plt.xticks(rotation=45, ha='center')
+    plt.xlabel("")
+    plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
+    plt.title("Casos de COVID-19 en Venezuela", fontsize=18, weight='bold')
+    # start, end = ax.get_xlim()
+    # ax.xaxis.set_ticks(np.arange(start, end, 5))
+    myFmt = mdates.DateFormatter('%Y-%m-%d')
+    ax.xaxis.set_major_formatter(myFmt)
     ax.legend(loc='upper left', fontsize=12)
-
     plt.savefig("fig1.png")
+
 
 
     # Gráfico del número de casos nuevos en Venezuela
@@ -114,70 +122,83 @@ try:
                 width=barwidth, label='Recuperados', alpha=0.8)
     bar3 = ax.bar(x + barwidth, nuevos["New_Death"],
                 width=barwidth, label='Fallecidos', color='C3', alpha=0.8)
-    plt.xticks(rotation=90, ha='center')
-    ax.set(
-        xlabel='',
-        ylabel='Cantidad de casos',
-        title='Nuevos casos de COVID-19 en Venezuela',
-        xticks=(nuevos['Date']),
-    )
-    show_values_on_bars(ax)
+    plt.xticks(rotation=45, ha='center')
+    start, end = ax.get_xlim()
+    #ax.xaxis.set_ticks(np.arange(start, end, 5))
+    #show_values_on_bars(ax)
+    plt.xlabel("")
+    plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
+    plt.title("Casos diarios de COVID-19 en Venezuela", fontsize=18, weight='bold')
     myFmt = mdates.DateFormatter('%Y-%m-%d')
     ax.xaxis.set_major_formatter(myFmt)
     ax.legend(loc='upper left', fontsize=12)
     plt.savefig("fig2.png")
 
 
-    # Gráfico de casos en Venezuela
-    fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(
-        4, figsize=dims, sharex=True, sharey=True)
-    fig.tight_layout(pad=4.0)
-    ax1.bar(confirmados["Date"], confirmados["Count"], color='C0', alpha=0.8)
-    ax1.set_title('Confirmados')
-    show_values_on_bars(ax1)
-    ax2.bar(recuperados["Date"], recuperados["Count"], color='C1', alpha=0.8)
-    ax2.set_title('Recuperados')
-    show_values_on_bars(ax2)
-    ax3.bar(activos["Date"], activos["Count"], color='C2', alpha=0.8)
-    ax3.set_title('Activos')
-    show_values_on_bars(ax3)
-    ax4.bar(fallecidos["Date"], fallecidos["Count"], color='C3', alpha=0.8)
-    ax4.set_title('Fallecidos')
-    show_values_on_bars(ax4)
-    plt.xticks(rotation=45, ha='right')
-    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
-                fontsize=15, weight='bold')
-    for ax in fig.get_axes():
-        ax.set(
-            xlabel='',
-            ylabel='Cantidad de casos',
-            xticks=(nuevos['Date']),
-        )
-        ax.label_outer()
-    plt.savefig("fig3.png")
+#    # Gráfico de casos en Venezuela
+#    fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(
+#        4, figsize=dims, sharex=True, sharey=True)
+#    fig.tight_layout(pad=4.0)
+#    ax1.bar(confirmados["Date"], confirmados["Count"], color='C0', alpha=0.8)
+#    ax1.set_title('Confirmados')
+#    #show_values_on_bars(ax1)
+#    ax2.bar(recuperados["Date"], recuperados["Count"], color='C1', alpha=0.8)
+#    ax2.set_title('Recuperados')
+#    #show_values_on_bars(ax2)
+#    ax3.bar(activos["Date"], activos["Count"], color='C2', alpha=0.8)
+#    ax3.set_title('Activos')
+#    #show_values_on_bars(ax3)
+#    ax4.bar(fallecidos["Date"], fallecidos["Count"], color='C3', alpha=0.8)
+#    ax4.set_title('Fallecidos')
+#    #show_values_on_bars(ax4)
+#    plt.xticks(rotation=45, ha='right')
+#    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
+#                fontsize=15, weight='bold')
+#    for ax in fig.get_axes():
+#        ax.set(
+#            xlabel='',
+#            ylabel='Cantidad de casos',
+#            xticks=(nuevos['Date']),
+#        )
+#        ax.label_outer()
+#    plt.savefig("fig3.png")
 
 
     # Gráfico de distribución por género de casos en Venezuela
     fig, ax = plt.subplots(figsize=dims)
     ax.pie(count_gender, labels=labels_gender, colors=['C0', 'C1'], wedgeprops={'alpha':0.8},
         autopct=lambda p: '{:.0f}'.format(p * int(summary.Confirmed['Count']) / 100), shadow=False, startangle=90)
-    centre_circle = plt.Circle((0, 0), 0.7, fc='white')
+    # centre_circle = plt.Circle((0, 0), 0.7, fc='white')
     fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
+    # fig.gca().add_artist(centre_circle)
     plt.axis('equal')
-    plt.title("Distribución de casos por género", fontsize=15, weight='bold')
+    plt.title("Distribución de casos por género", fontsize=18, weight='bold')
     fig.savefig("fig4.png")
 
 
     # Gráfico de distribución por edades de casos en Venezuela
     fig, ax = plt.subplots(figsize=dims)
-    ax.bar(df_ages["Range"], df_ages["Count"], color=['C0', 'C1',
-                                                    'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], alpha=0.8)
-    show_values_on_bars(ax)
+    ax.bar(df_ages["Range"], df_ages["Count"], color=['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], alpha=0.8)
+    #show_values_on_bars(ax)
     plt.xlabel("Rango de edad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Distribución de casos por edad", fontsize=15, weight='bold')
+    plt.title("Distribución de casos por edad", fontsize=18, weight='bold')
     fig.savefig("fig5.png")
+
+
+    # Gráfico de distribución por estados
+    fig, ax = plt.subplots(figsize=dims)
+    colors = cm.rainbow(np.linspace(1, 0, len(df_states["State"])))
+    df_states.sort_values(by=['Count'], inplace=True, ascending=False)
+    ax.bar(df_states["State"], df_states["Count"], color=colors, alpha=0.8)
+
+                                                    
+    #show_values_on_bars(ax)
+    plt.xlabel("Entidad", fontsize=12, weight='bold')
+    plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
+    plt.title("Distribución de casos por estado", fontsize=18, weight='bold')
+    plt.xticks(rotation=45, )
+    fig.savefig("fig6.png")
 
 
     # Salida por cónsola
