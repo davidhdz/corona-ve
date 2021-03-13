@@ -105,7 +105,7 @@ try:
     plt.xticks(rotation=45, ha='center')
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos de COVID-19 en Venezuela", fontsize=18, weight='bold')
+    plt.title("Casos de COVID-19 en Venezuela al "+last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     # start, end = ax.get_xlim()
     # ax.xaxis.set_ticks(np.arange(start, end, 5))
     myFmt = mdates.DateFormatter('%Y-%m-%d')
@@ -131,7 +131,7 @@ try:
     #show_values_on_bars(ax)
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos diarios de COVID-19 en Venezuela", fontsize=18, weight='bold')
+    plt.title("Casos diarios de COVID-19 en Venezuela al "+last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     myFmt = mdates.DateFormatter('%Y-%m-%d')
     ax.xaxis.set_major_formatter(myFmt)
     ax.legend(loc='upper left', fontsize=12)
@@ -175,7 +175,7 @@ try:
     fig = plt.gcf()
     # fig.gca().add_artist(centre_circle)
     plt.axis('equal')
-    plt.title("Distribución de casos por género", fontsize=18, weight='bold')
+    plt.title("Distribución de casos por género al "+last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     fig.savefig("fig4.png")
 
 
@@ -186,7 +186,7 @@ try:
     show_values_on_bars(ax,maxv)
     plt.xlabel("Rango de edad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Distribución de casos por edad", fontsize=18, weight='bold')
+    plt.title("Distribución de casos por edad al "+last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     fig.savefig("fig5.png")
 
 
@@ -199,7 +199,7 @@ try:
     show_values_on_bars(ax,maxv)
     plt.xlabel("Entidad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Distribución de casos por estado", fontsize=18, weight='bold')
+    plt.title("Distribución de casos por estado al "+last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     plt.xticks(rotation=45, )
     fig.savefig("fig6.png")
 
