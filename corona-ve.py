@@ -4,7 +4,7 @@
 """
 Visualización del Corona Virus en Venezuela
 utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
-por David Hernandez Aponte <@davidhdz> 2020
+por David Hernandez Aponte <@davidhdz> 2020-2021
 """
 
 # import seaborn as sns
@@ -14,6 +14,7 @@ from matplotlib.dates import date2num
 import numpy as np
 import pandas as pd
 import matplotlib.cm as cm
+import sys
 
 
 # Dimensión de los gráficos generados
@@ -26,14 +27,14 @@ plt.rcParams['axes.titleweight'] = 'bold'
 
 
 # Función para añadir valores encima de las gráficas
-def show_values_on_bars(axs):
+def show_values_on_bars(axs,maxv):
     def _show_on_single_plot(ax):
         for p in ax.patches:
             _x = p.get_x() + p.get_width() / 2
-            _y = p.get_y() + p.get_height() + .5
+            _y = p.get_y() + p.get_height() + maxv*.01
             value = '{:.0f}'.format(p.get_height())
             if int(value) > 0:
-                ax.text(_x, _y, value, ha="center", size="x-small")
+                ax.text(_x, _y, value, ha="center", size="small")
     if isinstance(axs, np.ndarray):
         for idx, ax in np.ndenumerate(axs):
             _show_on_single_plot(ax)
@@ -41,9 +42,10 @@ def show_values_on_bars(axs):
         _show_on_single_plot(axs)
 
 def show_values_on_lines(x,y):
-        for i,j in zip(x,y):
-            if int(j) > 0:
-                ax.annotate(str(j),xy=(i,j), xytext=(-5,6), textcoords='offset points', size="x-small")
+        #for i,j in zip(x,y):
+            #if int(j) > 0:
+                #ax.annotate(str(j),xy=(i,j), xytext=(-5,6), textcoords='offset points', size="x-small")
+        ax.annotate(str(y),xy=(x,y), xytext=(5,-1), textcoords='offset points', size="x-small")
 
 
 # Carga de datos y generación de Data frames para los gráficos de línea de tiempo
@@ -86,19 +88,20 @@ try:
     fig, ax = plt.subplots(figsize=dims)
     ax.plot(confirmados["Date"], confirmados["Count"],
             '-', label='Confirmados (acumulados)', alpha=0.8)
-    #show_values_on_lines(confirmados["Date"], confirmados["Count"])
+    show_values_on_lines(confirmados["Date"].iloc[-1], confirmados["Count"].iloc[-1])
     ax.plot(recuperados["Date"], recuperados["Count"],
             '-', label='Recuperados (acumulados)', alpha=0.8)
-    #show_values_on_lines(recuperados["Date"], recuperados["Count"])
+    show_values_on_lines(recuperados["Date"].iloc[-1], recuperados["Count"].iloc[-1])
     ax.plot(activos["Date"], activos["Count"],
             '-', label='Activos (acumulados)', alpha=0.8)
-    #show_values_on_lines(activos["Date"], activos["Count"])
+    show_values_on_lines(activos["Date"].iloc[-1], activos["Count"].iloc[-1])
     ax.plot(fallecidos["Date"], fallecidos["Count"],
             '-', label='Fallecidos (acumulados)', alpha=0.8)
-    #show_values_on_lines(fallecidos["Date"], fallecidos["Count"])
+    show_values_on_lines(fallecidos["Date"].iloc[-1], fallecidos["Count"].iloc[-1])
     #ax.bar(nuevos["Date"],nuevos["New_Confirmed"],color='C6')
     ax.plot(nuevos["Date"], nuevos["New_Confirmed"],
             '-', label='Confirmados (diarios)', color='black', alpha=0.8)
+    show_values_on_lines(nuevos["Date"].iloc[-1], nuevos["New_Confirmed"].iloc[-1])
     plt.xticks(rotation=45, ha='center')
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
@@ -135,33 +138,33 @@ try:
     plt.savefig("fig2.png")
 
 
-#    # Gráfico de casos en Venezuela
-#    fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(
-#        4, figsize=dims, sharex=True, sharey=True)
-#    fig.tight_layout(pad=4.0)
-#    ax1.bar(confirmados["Date"], confirmados["Count"], color='C0', alpha=0.8)
-#    ax1.set_title('Confirmados')
-#    #show_values_on_bars(ax1)
-#    ax2.bar(recuperados["Date"], recuperados["Count"], color='C1', alpha=0.8)
-#    ax2.set_title('Recuperados')
-#    #show_values_on_bars(ax2)
-#    ax3.bar(activos["Date"], activos["Count"], color='C2', alpha=0.8)
-#    ax3.set_title('Activos')
-#    #show_values_on_bars(ax3)
-#    ax4.bar(fallecidos["Date"], fallecidos["Count"], color='C3', alpha=0.8)
-#    ax4.set_title('Fallecidos')
-#    #show_values_on_bars(ax4)
-#    plt.xticks(rotation=45, ha='right')
-#    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
-#                fontsize=15, weight='bold')
-#    for ax in fig.get_axes():
-#        ax.set(
-#            xlabel='',
-#            ylabel='Cantidad de casos',
-#            xticks=(nuevos['Date']),
-#        )
-#        ax.label_outer()
-#    plt.savefig("fig3.png")
+    #    # Gráfico de casos en Venezuela
+    #    fig, ((ax1, ax2, ax3, ax4)) = plt.subplots(
+    #        4, figsize=dims, sharex=True, sharey=True)
+    #    fig.tight_layout(pad=4.0)
+    #    ax1.bar(confirmados["Date"], confirmados["Count"], color='C0', alpha=0.8)
+    #    ax1.set_title('Confirmados')
+    #    #show_values_on_bars(ax1)
+    #    ax2.bar(recuperados["Date"], recuperados["Count"], color='C1', alpha=0.8)
+    #    ax2.set_title('Recuperados')
+    #    #show_values_on_bars(ax2)
+    #    ax3.bar(activos["Date"], activos["Count"], color='C2', alpha=0.8)
+    #    ax3.set_title('Activos')
+    #    #show_values_on_bars(ax3)
+    #    ax4.bar(fallecidos["Date"], fallecidos["Count"], color='C3', alpha=0.8)
+    #    ax4.set_title('Fallecidos')
+    #    #show_values_on_bars(ax4)
+    #    plt.xticks(rotation=45, ha='right')
+    #    plt.suptitle('Casos de COVID-19 en Venezuela (acumulados)',
+    #                fontsize=15, weight='bold')
+    #    for ax in fig.get_axes():
+    #        ax.set(
+    #            xlabel='',
+    #            ylabel='Cantidad de casos',
+    #            xticks=(nuevos['Date']),
+    #        )
+    #        ax.label_outer()
+    #    plt.savefig("fig3.png")
 
 
     # Gráfico de distribución por género de casos en Venezuela
@@ -179,7 +182,8 @@ try:
     # Gráfico de distribución por edades de casos en Venezuela
     fig, ax = plt.subplots(figsize=dims)
     ax.bar(df_ages["Range"], df_ages["Count"], color=['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], alpha=0.8)
-    #show_values_on_bars(ax)
+    maxv=max(df_ages["Count"])
+    show_values_on_bars(ax,maxv)
     plt.xlabel("Rango de edad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
     plt.title("Distribución de casos por edad", fontsize=18, weight='bold')
@@ -191,9 +195,8 @@ try:
     colors = cm.rainbow(np.linspace(1, 0, len(df_states["State"])))
     df_states.sort_values(by=['Count'], inplace=True, ascending=False)
     ax.bar(df_states["State"], df_states["Count"], color=colors, alpha=0.8)
-
-                                                    
-    #show_values_on_bars(ax)
+    maxv=max(df_states["Count"])
+    show_values_on_bars(ax,maxv)
     plt.xlabel("Entidad", fontsize=12, weight='bold')
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
     plt.title("Distribución de casos por estado", fontsize=18, weight='bold')
@@ -225,4 +228,4 @@ try:
     print()
 
 except:
-    print("Ha ocurrido un error. Intente de nuevo.")
+    print("Ha ocurrido un error:", sys.exc_info()[0])
