@@ -7,16 +7,15 @@ utilizando el API de https://covid19.patria.org.ve/api-covid-19-venezuela/
 por David Hernandez Aponte <@davidhdz> 2020-2021
 """
 
-# import seaborn as sns
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.dates import date2num
-import numpy as np
-import pandas as pd
-import matplotlib.cm as cm
 import sys
 from datetime import datetime, time
 
+import matplotlib.cm as cm
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.dates import date2num
 
 # Dimensión de los gráficos generados
 dims = (20, 11)
@@ -143,9 +142,9 @@ try:
     ax.plot(nuevos['Date'], nuevos["New_Confirmed"],
             '-', label='Confirmados (acumulados)', alpha=0.8)
     # ax.bar(nuevos['Date'], nuevos["New_Confirmed"],
-                #   width=1, label='Confirmados', alpha=0.8)
+    #   width=1, label='Confirmados', alpha=0.8)
     # show_values_on_lines(
-        # nuevos['Date'].iloc[-1], nuevos["New_Confirmed"].iloc[-1])
+    # nuevos['Date'].iloc[-1], nuevos["New_Confirmed"].iloc[-1])
     # ax.bar(nuevos["Date"],nuevos["New_Confirmed"],color='C6')
     plt.xticks(rotation=45, ha='center')
     plt.xlabel("")
