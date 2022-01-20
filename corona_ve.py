@@ -8,13 +8,13 @@ por David Hernandez Aponte <@davidhdz> 2020-2021
 """
 
 import sys
-from datetime import datetime, time
+from datetime import datetime
 
-import matplotlib.cm as cm
-import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib import cm
+from matplotlib import dates as mdates
+from matplotlib import pyplot as plt
 from matplotlib.dates import date2num
 
 # Dimensión de los gráficos generados
@@ -27,47 +27,51 @@ plt.rcParams['axes.titleweight'] = 'bold'
 
 
 # Función para añadir valores encima de las gráficas
-def show_values_on_bars(axs, maxv):
-    def _show_on_single_plot(ax):
-        for p in ax.patches:
-            _x = p.get_x() + p.get_width() / 2
-            _y = p.get_y() + p.get_height() + maxv*.01
-            value = '{:.0f}'.format(p.get_height())
+def show_values_on_bars(axs, max_v):
+    """Prints values above the bars"""
+    def _show_on_single_plot(axx):
+        for patch in axx.patches:
+            ancho = patch.get_width()
+            alto = patch.get_height()
+            _x = patch.get_x() + ancho / 2
+            _y = patch.get_y() + alto + max_v*.01
+            value = f'{alto:.0f}'
             if int(value) > 0:
-                ax.text(_x, _y, value, ha="center", size="small")
+                axx.text(_x, _y, value, ha="center", size="small")
     if isinstance(axs, np.ndarray):
-        for idx, ax in np.ndenumerate(axs):
-            _show_on_single_plot(ax)
+        for _, ax_val in np.ndenumerate(axs):
+            _show_on_single_plot(ax_val)
     else:
         _show_on_single_plot(axs)
 
 
-def show_values_on_lines(x, y):
+def show_values_on_lines(x_value, y_value):
+    """Prints values at the end of lines"""
     # for i,j in zip(x,y):
     # if int(j) > 0:
     #ax.annotate(str(j),xy=(i,j), xytext=(-5,6), textcoords='offset points', size="x-small")
-    ax.annotate(str(y), xy=(x, y), xytext=(5, -1),
+    ax.annotate(str(y_value), xy=(x_value, y_value), xytext=(5, -1),
                 textcoords='offset points', size="x-small")
 
 
 # Carga de datos y generación de Data frames para los gráficos de línea de tiempo
 try:
-    arguments = len(sys.argv)-1
+    ARGS = len(sys.argv)-1
     timeline = pd.read_json('https://covid19.patria.org.ve/api/v1/timeline')
     timeline['Date'] = timeline['Date'].dt.date
     f_ini = timeline['Date'].iloc[0]
     f_fin = timeline['Date'].iloc[-1]
     f_fin2 = timeline.iloc[-1]
 
-    if arguments > 0:
+    if ARGS > 0:
         try:
             f_ini = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
-            if arguments == 2:
+            if ARGS == 2:
                 f_fin = datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
 
             mask = (timeline['Date'] >= f_ini) & (timeline['Date'] <= f_fin)
             timeline = timeline.loc[mask].reset_index()
-        except:
+        except ValueError:
             print(
                 "Error en formato de fecha, use el siguiente formato: YYYY-MM-DD o YYYY-M-D")
             print("Se usarán los rangos de fecha predeterminados.")
@@ -128,7 +132,8 @@ try:
     plt.xticks(rotation=45, ha='center')
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos de COVID-19 en Venezuela del " + first_report['Date'].strftime('%d/%m/%Y') + " al " +
+    plt.title("Casos de COVID-19 en Venezuela del " +
+              first_report['Date'].strftime('%d/%m/%Y') + " al " +
               last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     # start, end = ax.get_xlim()
     # ax.xaxis.set_ticks(np.arange(start, end, 5))
@@ -149,7 +154,8 @@ try:
     plt.xticks(rotation=45, ha='center')
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos Diarios Confirmados de COVID-19 en Venezuela del " + first_report['Date'].strftime('%d/%m/%Y') + " al " +
+    plt.title("Casos Diarios Confirmados de COVID-19 en Venezuela del " +
+              first_report['Date'].strftime('%d/%m/%Y') + " al " +
               last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     # start, end = ax.get_xlim()
     # ax.xaxis.set_ticks(np.arange(start, end, 5))
@@ -161,18 +167,19 @@ try:
     # Gráfico del número de casos nuevos en Venezuela
     fig, ax = plt.subplots(figsize=dims)
     x = date2num(nuevos['Date'])
-    barwidth = .3
-    bar1 = ax.bar(x - barwidth, nuevos["New_Confirmed"],
-                  width=barwidth, label='Confirmados', alpha=0.8)
+    BARWIDTH = .3
+    bar1 = ax.bar(x - BARWIDTH, nuevos["New_Confirmed"],
+                  width=BARWIDTH, label='Confirmados', alpha=0.8)
     bar2 = ax.bar(x, nuevos["New_Recovered"],
-                  width=barwidth, label='Recuperados', alpha=0.8)
-    bar3 = ax.bar(x + barwidth, nuevos["New_Death"],
-                  width=barwidth, label='Fallecidos', color='C3', alpha=0.8)
+                  width=BARWIDTH, label='Recuperados', alpha=0.8)
+    bar3 = ax.bar(x + BARWIDTH, nuevos["New_Death"],
+                  width=BARWIDTH, label='Fallecidos', color='C3', alpha=0.8)
     plt.xticks(rotation=45, ha='center')
     # show_values_on_bars(ax)
     plt.xlabel("")
     plt.ylabel("Cantidad de casos", fontsize=12, weight='bold')
-    plt.title("Casos diarios de COVID-19 en Venezuela del " + first_report['Date'].strftime('%d/%m/%Y') + " al " +
+    plt.title("Casos diarios de COVID-19 en Venezuela del " +
+              first_report['Date'].strftime('%d/%m/%Y') + " al " +
               last_report['Date'].strftime('%d/%m/%Y'), fontsize=18, weight='bold')
     # start, end = ax.get_xlim()
     #ax.xaxis.set_ticks(np.arange(start, end, 5))
@@ -212,7 +219,8 @@ try:
     # Gráfico de distribución por género de casos en Venezuela
     fig, ax = plt.subplots(figsize=dims)
     ax.pie(count_gender, labels=labels_gender, colors=['C0', 'C1'], wedgeprops={'alpha': 0.8},
-           autopct=lambda p: '{:.0f}'.format(p * int(summary.Confirmed['Count']) / 100), shadow=False, startangle=90)
+           autopct=lambda p: f"{p * int(summary.Confirmed['Count']) / 100:.0f}",
+           shadow=False, startangle=90)
     # centre_circle = plt.Circle((0, 0), 0.7, fc='white')
     fig = plt.gcf()
     # fig.gca().add_artist(centre_circle)
@@ -248,6 +256,8 @@ try:
     fig.savefig("fig6.png")
 
     # Salida por cónsola
+    letalidad = int(summary.Deaths['Count'])/int(summary.Confirmed['Count'])*100
+    recuperacion = int(summary.Recovered['Count'])/int(summary.Confirmed['Count'])*100
     print()
     print("Casos COVID-19 en Venezuela")
     print("===========================")
@@ -258,10 +268,8 @@ try:
     print()
     print("Estadísticas")
     print("===========================")
-    print("Letalidad: \t{0:3.2f}%".format(
-        (int(summary.Deaths['Count'])/int(summary.Confirmed['Count']))*100))
-    print("Recuperación: \t{0:3.2f}%".format(
-        (int(summary.Recovered['Count'])/int(summary.Confirmed['Count']))*100))
+    print(f"Letalidad: \t{letalidad:3.2f}%")
+    print(f"Recuperación: \t{recuperacion:3.2f}%")
     print()
     print("Casos del día ", last_report['Date'].strftime('%d/%m/%Y'))
     print("===========================")
@@ -269,6 +277,6 @@ try:
     print("Recuperados: \t",  int(last_report['Recovered']['New']))
     print("Fallecidos: \t",  int(last_report['Deaths']['New']))
     print()
-except BaseException as err:
+except SystemError as err:
     print("Ha ocurrido un error:", err)
     print()

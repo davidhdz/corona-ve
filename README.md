@@ -1,4 +1,4 @@
-# corona-ve-sns
+# corona_ve
 
 Script en Python para generación de gráficos referentes a los casos de COVID-19 en Venezuela utilizando el API de covid19.patria.org.ve
 
@@ -18,15 +18,15 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
 * Forma predeterminada, mostrará los datos desde el primer registro hasta el último ofrecido por la API.
 
 
-    `python corona-ve.py`
+    `python corona_ve.py`
 
 * Un solo argumento, mostrará los datos desde la fecha introducida hasta el último ofrecido por la API.
 
-    `python corona-ve.py 2022-01-01`
+    `python corona_ve.py 2022-01-01`
 
 * Dos argumentos, mostrará los datos entre los rangos de fecha introducidos.
 
-    `python corona-ve.py 2021-01-01 2021-12-31`
+    `python corona_ve.py 2021-01-01 2021-12-31`
 
 ----
 
