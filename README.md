@@ -10,23 +10,23 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
 * numpy
 * pandas
 
+
 ----
 
-## Muestra:
+## Entrada del terminal (ejemplos):
 
-[![Casos confirmados](./images/fig1.png "Casos confirmados")](/images/fig1.png)
-
-
-[![Casos nuevos](./images/fig2.png "Casos diarios")](/images/fig2.png)
+* Forma predeterminada, mostrará los datos desde el primer registro hasta el último ofrecido por la API.
 
 
-[![Casos por género](./images/fig4.png "Distribución de casoso por género")](/images/fig4.png)
+    `python corona-ve.py`
 
+* Un solo argumento, mostrará los datos desde la fecha introducida hasta el último ofrecido por la API.
 
-[![Casos por edad](./images/fig5.png "Distribución de casos por edad")](/images/fig5.png)
+    `python corona-ve.py 2022-01-01`
 
+* Dos argumentos, mostrará los datos entre los rangos de fecha introducidos.
 
-[![Casos por estado](./images/fig6.png "Distribución de casos por edad")](/images/fig6.png)
+    `python corona-ve.py 2021-01-01 2021-12-31`
 
 ----
 
@@ -34,22 +34,42 @@ Script en Python para generación de gráficos referentes a los casos de COVID-1
     
     Casos COVID-19 en Venezuela
     ===========================
-    Confirmados:     325
-    Recuperados:     137
-    Fallecidos:      10
-    Activos:         178
-    
-    Nuevos casos al 26/04/2020
-    ===========================
-    Confirmados:     2
-    Recuperados:     5
-    Fallecidos:      0 
-    
+    Confirmados:     458731
+    Recuperados:     439641
+    Fallecidos:      5387
+    Activos:         13703
+
     Estadísticas
     ===========================
-    Letalidad:      3.08%
-    Recuperación:   42.15%
+    Letalidad:      1.17%
+    Recuperación:   95.84%
+
+    Casos del día  18/01/2022
+    ===========================
+    Confirmados:     2090
+    Recuperados:     919
+    Fallecidos:      4
     
+----
+
+## Gráficos:
+
+[![Casos confirmados](./images/fig1.png "Casos confirmados")](/images/fig1.png)
+
+
+[![Casos confirmados nuevos](./images/fig2.png "Nuevos casos confirmados diarios")](/images/fig2.png)
+
+
+[![Casos nuevos](./images/fig3.png "Nuevos casos diarios")](/images/fig3.png)
+
+
+[![Casos por género](./images/fig4.png "Distribución de casos por género")](/images/fig4.png)
+
+
+[![Casos por edad](./images/fig5.png "Distribución de casos por edad")](/images/fig5.png)
+
+
+[![Casos por estado](./images/fig6.png "Distribución de casos por edad")](/images/fig6.png)
 
 ----
 
