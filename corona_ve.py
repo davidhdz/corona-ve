@@ -21,7 +21,7 @@ from matplotlib.dates import date2num
 dims = (20, 11)
 
 # Personalización general de los gráficos
-plt.style.use('seaborn-darkgrid')
+plt.style.use('seaborn-v0_8-darkgrid')
 plt.rcParams['lines.linewidth'] = 2
 plt.rcParams['axes.titleweight'] = 'bold'
 
